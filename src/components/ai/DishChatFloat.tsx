@@ -60,15 +60,24 @@ export function DishChatFloat() {
         body: JSON.stringify({ dish }),
       });
       const data = await res.json() as { history?: string; error?: string };
+
+      if (!res.ok) {
+        const errMsg = data.error
+          ? `I could not answer "${dish}" right now: ${data.error}`
+          : `I could not answer "${dish}" right now.`;
+        setMessages((prev) => [...prev, { role: "ai", content: errMsg }]);
+        return;
+      }
+
       const aiMsg: Message = {
         role: "ai",
-        content: data.history ?? "Sorry, I couldn't find information about that dish right now.",
+        content: data.history ?? `I could not find details for "${dish}" right now.`,
       };
       setMessages((prev) => [...prev, aiMsg]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "ai", content: "Something went wrong. Please try again." },
+        { role: "ai", content: `Network issue while searching for "${dish}". Please try again.` },
       ]);
     } finally {
       setLoading(false);

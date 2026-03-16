@@ -12,7 +12,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Normalize via Groq (deduplication)
-    const { canonicalName, category, aliases } = await normalizeSearchQuery(rawQuery);
+    const { standardized_name, original_query } = await normalizeSearchQuery(rawQuery);
+
+    if (standardized_name === "Invalid") {
+      return NextResponse.json({ recorded: false, reason: "invalid-query" }, { status: 200 });
+    }
+
+    const canonicalName = standardized_name;
+    const category = "Pahadi Dish";
 
     await connectToDatabase();
 
@@ -44,7 +51,7 @@ export async function POST(request: NextRequest) {
     await SearchQuery.create({
       canonicalName,
       category,
-      aliases: [...new Set([rawQuery.toLowerCase(), ...aliases.map((a) => a.toLowerCase())])],
+      aliases: [...new Set([rawQuery.toLowerCase(), original_query.toLowerCase()])],
       count: 1,
       lastSearchedAt: new Date(),
     });

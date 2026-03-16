@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ history });
   } catch (error) {
     console.error("[ai/dish-history] Error:", error);
-    return NextResponse.json({ error: "Failed to get dish history" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Failed to get dish history";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
