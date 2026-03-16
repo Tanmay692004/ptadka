@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-dark: #0a0a0a;
+    --bg-light: #1a3a5c;
+    --page-dark: #2d2d2d;
+    --page-light: #f5f0e1;
+    --text-dark: #e0e0e0;
+    --text-light: #e7dcc0;
+    --page-text-light: #111111;
+    --paperclip-dark: #888888;
+    --paperclip-light: #ffd700;
+    --bulb-off: #4a4a4a;
+    --bulb-on: #fff9c4;
+    --bulb-glow: rgba(255, 249, 196, 0.6);
+    --accent: #ffd700;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-light);
+  }
+
+  html.dark {
+    background-color: var(--bg-dark);
+  }
+
+  html.light {
+    background-color: var(--bg-light);
+  }
+
+  body {
+    font-family: var(--font-inter), 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    background-color: var(--bg-light);
+    color: var(--text-light);
+  }
+
+  html.dark body,
+  body.dark {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+  }
+
+  html.light body,
+  body.light {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+  }
+
+  ::selection {
+    background: rgba(255, 215, 0, 0.3);
+  }
+
+  .dark ::selection {
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Notebook page look */
+  .notebook-page {
+    position: relative;
+  }
+
+  .dark .notebook-page {
+    background-color: var(--page-dark);
+    color: var(--text-dark);
+    background-image:
+      linear-gradient(90deg, transparent 95%, rgba(0,0,0,0.1) 95%),
+      linear-gradient(transparent 95%, rgba(0,0,0,0.1) 95%);
+    background-size: 20px 20px;
+  }
+
+  .light .notebook-page {
+    background-color: var(--page-light);
+    color: var(--page-text-light);
+    background-image:
+      linear-gradient(90deg, transparent 95%, rgba(0,0,0,0.05) 95%),
+      linear-gradient(transparent 95%, rgba(0,0,0,0.05) 95%);
+    background-size: 20px 20px;
+  }
+
+  .notebook-page::before {
+    content: '';
+    position: absolute;
+    left: 40px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    pointer-events: none;
+  }
+
+  .light .notebook-page::before {
+    background: rgba(0,0,0,0.05);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.7);
 }
